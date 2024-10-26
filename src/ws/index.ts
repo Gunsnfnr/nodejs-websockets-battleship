@@ -1,12 +1,12 @@
 import WebSocket, { WebSocketServer } from 'ws';
+import { handleRegResponse } from './handleRegResponse';
 
 const startWss = () => {
   const wss = new WebSocketServer({ port: 3000 });
 
   wss.on('connection', (ws: WebSocket) => {
-    console.log('ws: ', ws);
-    ws.on('message', (data: Buffer) => {
-      console.log('data: ', JSON.parse(data.toString()));
+    ws.on('message', (userData: Buffer) => {
+      handleRegResponse(userData, ws);
     });
     ws.onerror = function () {
       console.log('An error occurred');
