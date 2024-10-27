@@ -2,11 +2,13 @@ import WebSocket from 'ws';
 import crypto from 'node:crypto';
 import { Room } from '../types';
 import { sendUpdateRoom } from './send-update-room';
+import { rooms } from './const';
 
-const handleCreateRoom = (userData: Buffer, ws: WebSocket, nameOfUser: string, rooms: Room[]): void => {
+const handleCreateRoom = (userData: Buffer, ws: WebSocket, nameOfUser: string): void => {
   const incomingData = JSON.parse(userData.toString());
   console.log('incomingData: ', incomingData);
   let playerId: string = '';
+
   let roomId: string = '';
 
   if (incomingData.type === 'create_room') {
@@ -24,7 +26,11 @@ const handleCreateRoom = (userData: Buffer, ws: WebSocket, nameOfUser: string, r
       ],
     };
     rooms.push(newRoom);
-    sendUpdateRoom(ws, rooms);
+    sendUpdateRoom(ws);
+  }
+  if (incomingData.type === 'add_ships') {
+    const shipsData = JSON.parse(incomingData.data);
+    console.log('shipsData: ', shipsData);
   }
 };
 

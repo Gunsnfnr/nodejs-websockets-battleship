@@ -1,9 +1,10 @@
 import WebSocket from 'ws';
-import { LoginData, Message, Room } from '../types';
+import { LoginData, Message } from '../types';
 import crypto from 'node:crypto';
 import { sendUpdateRoom } from './send-update-room';
+import { users } from './const';
 
-const handleRegResponse = (userData: Buffer, ws: WebSocket, users: string[], rooms: Room[]): string => {
+const handleRegResponse = (userData: Buffer, ws: WebSocket): string => {
   let nameOfUser = '';
   const incomingData: Message = JSON.parse(userData.toString());
   let loginData: LoginData;
@@ -39,7 +40,7 @@ const handleRegResponse = (userData: Buffer, ws: WebSocket, users: string[], roo
   }
 
   ws.send(response);
-  sendUpdateRoom(ws, rooms);
+  sendUpdateRoom(ws);
 
   return nameOfUser;
 };

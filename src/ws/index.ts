@@ -7,19 +7,21 @@ import { sendUpdateRoom } from './send-update-room';
 const startWss = () => {
   const wss = new WebSocketServer({ port: 3000 });
 
-  const users: string[] = [];
-  const rooms: Room[] = [];
+  // const users: string[] = [];
+  // const rooms: Room[] = [];
 
   wss.on('connection', (ws: WebSocket) => {
     let nameOfUser: string;
     ws.on('message', (userData: Buffer) => {
       const incomingData: Message = JSON.parse(userData.toString());
+
       if (incomingData.type === 'reg') {
-        nameOfUser = handleRegResponse(userData, ws, users, rooms);
+        nameOfUser = handleRegResponse(userData, ws);
       }
-      handleCreateRoom(userData, ws, nameOfUser, rooms);
+
+      handleCreateRoom(userData, ws, nameOfUser);
       wss.clients.forEach((client) => {
-        sendUpdateRoom(client, rooms);
+        sendUpdateRoom(client);
       });
     });
     ws.onerror = function () {

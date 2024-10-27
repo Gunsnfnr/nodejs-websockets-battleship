@@ -1,7 +1,7 @@
 import WebSocket from 'ws';
-import { Room } from '../types';
+import { rooms } from './const';
 
-const sendUpdateRoom = (ws: WebSocket, rooms: Room[]) => {
+const sendUpdateRoom = (ws: WebSocket) => {
   const response = JSON.stringify({
     type: 'update_room',
     data: JSON.stringify(rooms),
