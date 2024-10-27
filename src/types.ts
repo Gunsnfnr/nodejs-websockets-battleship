@@ -1,3 +1,5 @@
+import WebSocket from 'ws';
+
 export interface Message {
   type: string;
   data: string;
@@ -35,4 +37,10 @@ export interface RoomUser {
 export interface Room {
   roomId: string;
   roomUsers: RoomUser[];
+}
+
+export interface SocketInterface {
+  webSocket: WebSocket;
+  nameOfUser: string;
+  idOfUser: string;
 }

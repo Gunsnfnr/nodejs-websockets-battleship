@@ -1,11 +1,12 @@
 import WebSocket from 'ws';
 import { LoginData, Message } from '../types';
 import crypto from 'node:crypto';
-import { sendUpdateRoom } from './send-update-room';
-import { users } from './const';
+import { sendUpdateRoom } from './utils/send-update-room';
+import { sockets, users } from './const';
 
-const handleRegResponse = (userData: Buffer, ws: WebSocket): string => {
+const handleRegResponse = (userData: Buffer, ws: WebSocket): [string, string] => {
   let nameOfUser = '';
+  let idOfUser = '';
   const incomingData: Message = JSON.parse(userData.toString());
   let loginData: LoginData;
 
@@ -18,7 +19,7 @@ const handleRegResponse = (userData: Buffer, ws: WebSocket): string => {
       type: 'reg',
       data: JSON.stringify({
         name: nameOfUser,
-        index: crypto.randomUUID(),
+        index: '',
         error: true,
         errorText: `User with the name "${nameOfUser}" already exists`,
       }),
@@ -26,23 +27,31 @@ const handleRegResponse = (userData: Buffer, ws: WebSocket): string => {
     });
   } else {
     users.push(nameOfUser);
+    idOfUser = crypto.randomUUID();
+    console.log('idOfUser: ', idOfUser);
 
     response = JSON.stringify({
       type: 'reg',
       data: JSON.stringify({
         name: loginData.name,
-        index: crypto.randomUUID(),
+        index: idOfUser,
         error: false,
         errorText: '',
       }),
       id: 0,
+    });
+
+    sockets.push({
+      webSocket: ws,
+      nameOfUser: nameOfUser,
+      idOfUser: idOfUser,
     });
   }
 
   ws.send(response);
   sendUpdateRoom(ws);
 
-  return nameOfUser;
+  return [nameOfUser, idOfUser];
 };
 
 export { handleRegResponse };
