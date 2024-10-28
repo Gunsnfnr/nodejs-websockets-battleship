@@ -29,14 +29,21 @@ const battleHandler = (incomingData: Message, ws: WebSocket) => {
   if (shotStatus === 'miss') {
     nextTurnIsFor = togglePlayer(idOfUser, currentGame);
   }
-
-  sendWhoseTurnIsNext(nextTurnIsFor, ws);
+  if (shouldGameGoOn) {
+    sendWhoseTurnIsNext(nextTurnIsFor, ws);
+  } else {
+    sendFinish(idOfUser, ws);
+  }
 
   sockets.forEach((socket) => {
     if (socket.idOfUser === togglePlayer(idOfUser, currentGame)) {
       socket.webSocket.send(attackFeedback);
 
-      sendWhoseTurnIsNext(nextTurnIsFor, socket.webSocket);
+      if (shouldGameGoOn) {
+        sendWhoseTurnIsNext(nextTurnIsFor, socket.webSocket);
+      } else {
+        sendFinish(idOfUser, socket.webSocket);
+      }
     }
   });
 };
