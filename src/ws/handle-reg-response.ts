@@ -5,12 +5,12 @@ import { sendUpdateRoom } from './send-update-room';
 import { sockets, users } from './const';
 
 const handleRegResponse = (incomingData: Message, ws: WebSocket): [string, string] => {
-  let nameOfUser = '';
   let idOfUser = '';
   let loginData: LoginData;
 
   loginData = JSON.parse(incomingData.data);
-  nameOfUser = loginData.name;
+  const nameOfUser = loginData.name;
+  const password = loginData.password;
   let response = '';
 
   if (users.includes(nameOfUser)) {
@@ -43,6 +43,7 @@ const handleRegResponse = (incomingData: Message, ws: WebSocket): [string, strin
       webSocket: ws,
       nameOfUser: nameOfUser,
       idOfUser: idOfUser,
+      password,
     });
   }
 

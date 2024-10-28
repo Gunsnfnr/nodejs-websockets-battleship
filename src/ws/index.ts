@@ -7,6 +7,7 @@ import { handleStartGame } from './handle-start-game';
 import { battleHandler } from './battle-turns-handler';
 import { updateRoomsForAllUsers } from './utils/update-rooms-for-all-users';
 import { sendWinnersToAllUsers } from './send-winners-to-all-users';
+import { handleRemoveUser } from './utils/remove-user';
 
 const startWss = () => {
   const wss = new WebSocketServer({ port: 3000 });
@@ -58,6 +59,9 @@ const startWss = () => {
 
     ws.on('close', () => {
       console.log('Client disconnected');
+      handleRemoveUser(idOfUser);
+      updateRoomsForAllUsers();
+      sendWinnersToAllUsers();
     });
   });
 

@@ -43,6 +43,7 @@ export interface SocketInterface {
   webSocket: WebSocket;
   nameOfUser: string;
   idOfUser: string;
+  password: string;
 }
 
 export type Winner = {
