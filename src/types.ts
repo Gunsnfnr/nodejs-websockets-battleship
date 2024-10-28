@@ -67,6 +67,8 @@ export type shipPartsCondition = {
 export interface shipCondition {
   decks: shipPartsCondition[];
   isDead: boolean;
+  direction: boolean;
+  length: 1 | 2 | 3 | 4;
 }
 
 export interface fleetData {
@@ -74,6 +76,11 @@ export interface fleetData {
   isDefeated: boolean;
   owner: string;
 }
+
+export type Cell = {
+  x: number;
+  y: number;
+};
 
 export interface Attack {
   x: number;

@@ -1,5 +1,5 @@
-import WebSocket, { WebSocketServer } from 'ws';
-import { Attack, Message } from '../types';
+import WebSocket from 'ws';
+import { Message } from '../types';
 import { games, sockets } from './const';
 import { checkShotResult } from './utils/check-shot-result';
 import { togglePlayer } from './utils/toggle-player';
@@ -7,6 +7,7 @@ import { sendWhoseTurnIsNext } from './send-whose-turn-is-next';
 import { sendFinish } from './send-finish';
 import { addToWinners } from './utils/add-to-winners';
 import { sendWinnersToAllUsers } from './send-winners-to-all-users';
+import { sendAttackFeedback } from './send-attack-feedback';
 
 const battleHandler = (incomingData: Message, ws: WebSocket) => {
   const parsedData = JSON.parse(incomingData.data);
@@ -22,22 +23,16 @@ const battleHandler = (incomingData: Message, ws: WebSocket) => {
     yFire = Math.floor(Math.random() * 10);
   }
 
-  const [shotStatus, shouldGameGoOn] = checkShotResult(xFire, yFire, gameId, idOfUser);
+  const [shotStatus, shouldGameGoOn, emptyCells] = checkShotResult(xFire, yFire, gameId, idOfUser);
   const currentGame = games.find((game) => game.gameId === gameId)!;
 
-  const attackFeedback = JSON.stringify({
-    type: 'attack',
-    data: JSON.stringify({
-      position: {
-        x: xFire,
-        y: yFire,
-      },
-      currentPlayer: idOfUser,
-      status: shotStatus,
-    }),
-    id: 0,
-  });
-  ws.send(attackFeedback);
+  sendAttackFeedback(xFire, yFire, idOfUser, shotStatus, ws);
+  if (shotStatus === 'killed') {
+    console.log('emptyCells: ', emptyCells);
+    emptyCells.forEach((cell) => {
+      sendAttackFeedback(cell.x, cell.y, idOfUser, 'miss', ws);
+    });
+  }
 
   let nextTurnIsFor = idOfUser;
   if (shotStatus === 'miss') {
@@ -53,7 +48,12 @@ const battleHandler = (incomingData: Message, ws: WebSocket) => {
 
   sockets.forEach((socket) => {
     if (socket.idOfUser === togglePlayer(idOfUser, currentGame)) {
-      socket.webSocket.send(attackFeedback);
+      sendAttackFeedback(xFire, yFire, idOfUser, shotStatus, socket.webSocket);
+      if (shotStatus === 'killed') {
+        emptyCells.forEach((cell) => {
+          sendAttackFeedback(cell.x, cell.y, idOfUser, 'miss', socket.webSocket);
+        });
+      }
 
       if (shouldGameGoOn) {
         sendWhoseTurnIsNext(nextTurnIsFor, socket.webSocket);

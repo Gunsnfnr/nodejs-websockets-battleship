@@ -7,7 +7,12 @@ const playerShipsStructuring = (shipsData: oneShipData[], idOfUser: string) => {
     owner: idOfUser,
   };
   for (let i = 0; i < shipsData.length; i += 1) {
-    const ship: shipCondition = { decks: [], isDead: false };
+    const ship: shipCondition = {
+      decks: [],
+      isDead: false,
+      direction: shipsData[i].direction,
+      length: shipsData[i].length,
+    };
     for (let j = 0; j < shipsData[i].length; j += 1) {
       const newDeck = {
         x: shipsData[i].position.x + Number(!shipsData[i].direction) * j,
