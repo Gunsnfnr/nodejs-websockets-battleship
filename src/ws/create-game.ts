@@ -1,6 +1,6 @@
 import WebSocket from 'ws';
-import { Message } from '../types';
-import { rooms, sockets } from './const';
+import { Message, Game } from '../types';
+import { games, rooms, sockets } from './const';
 import { removeRoomFromAvailableRooms } from './utils/remove-room-from-available-rooms';
 import { sendCreateGame } from './utils/send-create-game';
 
@@ -13,17 +13,27 @@ const createGame = (userData: Buffer, ws: WebSocket, guestUser: string) => {
 
   rooms.forEach((room, roomIndex) => {
     if (room.roomId === roomId) {
-      gameId = crypto.randomUUID();
-
-      sendCreateGame(gameId, guestUser, ws);
-
       hostUserId = room.roomUsers[0].index;
 
-      sockets.forEach((socket) => {
-        if (socket.idOfUser === hostUserId) sendCreateGame(gameId, hostUserId, socket.webSocket);
-      });
+      if (hostUserId !== guestUser) {
+        gameId = crypto.randomUUID();
+        sendCreateGame(gameId, guestUser, ws);
 
-      removeRoomFromAvailableRooms(roomIndex);
+        sockets.forEach((socket) => {
+          if (socket.idOfUser === hostUserId) sendCreateGame(gameId, hostUserId, socket.webSocket);
+        });
+
+        removeRoomFromAvailableRooms(roomIndex);
+        const newGame: Game = {
+          gameId: gameId,
+          player1: hostUserId,
+          player2: guestUser,
+          player1fleet: [],
+          player2fleet: [],
+        };
+
+        games.push(newGame);
+      }
     }
   });
 };

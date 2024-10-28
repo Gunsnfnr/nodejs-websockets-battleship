@@ -4,7 +4,7 @@ import { Room } from '../types';
 import { sendUpdateRoom } from './utils/send-update-room';
 import { rooms } from './const';
 
-const handleCreateRoom = (userData: Buffer, ws: WebSocket, nameOfUser: string, idOfUser: string): void => {
+const createRoom = (ws: WebSocket, nameOfUser: string, idOfUser: string): void => {
   let roomId: string = '';
 
   roomId = crypto.randomUUID();
@@ -22,4 +22,4 @@ const handleCreateRoom = (userData: Buffer, ws: WebSocket, nameOfUser: string, i
   sendUpdateRoom(ws);
 };
 
-export { handleCreateRoom };
+export { createRoom };

@@ -28,7 +28,6 @@ const handleRegResponse = (userData: Buffer, ws: WebSocket): [string, string] =>
   } else {
     users.push(nameOfUser);
     idOfUser = crypto.randomUUID();
-    console.log('idOfUser: ', idOfUser);
 
     response = JSON.stringify({
       type: 'reg',

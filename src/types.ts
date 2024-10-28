@@ -44,3 +44,28 @@ export interface SocketInterface {
   nameOfUser: string;
   idOfUser: string;
 }
+
+export type Game = {
+  gameId: string;
+  player1: string;
+  player2: string;
+  player1fleet: fleetData[];
+  player2fleet: fleetData[];
+};
+
+export type shipPartsCondition = {
+  x: number;
+  y: number;
+  isHit: boolean;
+};
+
+export interface shipCondition {
+  decks: shipPartsCondition[];
+  isDead: boolean;
+}
+
+export interface fleetData {
+  ships: shipCondition[];
+  isDefeated: boolean;
+  owner: string;
+}
