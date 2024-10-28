@@ -1,5 +1,5 @@
 import WebSocket from 'ws';
-import { rooms } from '../const';
+import { rooms } from './const';
 
 const sendUpdateRoom = (ws: WebSocket) => {
   const response = JSON.stringify({

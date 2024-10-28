@@ -1,7 +1,7 @@
 import WebSocket from 'ws';
 import { LoginData, Message } from '../types';
 import crypto from 'node:crypto';
-import { sendUpdateRoom } from './utils/send-update-room';
+import { sendUpdateRoom } from './send-update-room';
 import { sockets, users } from './const';
 
 const handleRegResponse = (userData: Buffer, ws: WebSocket): [string, string] => {

@@ -2,7 +2,8 @@ import WebSocket from 'ws';
 import { Message, Game } from '../types';
 import { games, rooms, sockets } from './const';
 import { removeRoomFromAvailableRooms } from './utils/remove-room-from-available-rooms';
-import { sendCreateGame } from './utils/send-create-game';
+import { sendCreateGame } from './send-create-game';
+import { removeEmptyRoomsOfThisPlayer } from './utils/remove-empty-rooms-of-this-player';
 
 const createGame = (userData: Buffer, ws: WebSocket, guestUser: string) => {
   let hostUserId = '';
@@ -24,6 +25,7 @@ const createGame = (userData: Buffer, ws: WebSocket, guestUser: string) => {
         });
 
         removeRoomFromAvailableRooms(roomIndex);
+        removeEmptyRoomsOfThisPlayer(guestUser);
         const newGame: Game = {
           gameId: gameId,
           player1: hostUserId,

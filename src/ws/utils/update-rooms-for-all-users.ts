@@ -1,9 +1,9 @@
-import { WebSocketServer } from 'ws';
-import { sendUpdateRoom } from './send-update-room';
+import { sockets } from '../const';
+import { sendUpdateRoom } from '../send-update-room';
 
-const updateRoomsForAllUsers = (wss: WebSocketServer) => {
-  wss.clients.forEach((client) => {
-    sendUpdateRoom(client);
+const updateRoomsForAllUsers = () => {
+  sockets.forEach((client) => {
+    sendUpdateRoom(client.webSocket);
   });
 };
 

@@ -3,8 +3,10 @@ import { Attack, Message } from '../types';
 import { games, sockets } from './const';
 import { checkShotResult } from './utils/check-shot-result';
 import { togglePlayer } from './utils/toggle-player';
-import { sendWhoseTurnIsNext } from './utils/send-whose-turn-is-next';
-import { sendFinish } from './utils/send-finish';
+import { sendWhoseTurnIsNext } from './send-whose-turn-is-next';
+import { sendFinish } from './send-finish';
+import { addToWinners } from './utils/add-to-winners';
+import { sendWinnersToAllUsers } from './send-winners-to-all-users';
 
 const battleHandler = (incomingData: Message, ws: WebSocket) => {
   const { x: xFire, y: yFire, gameId, indexPlayer: idOfUser }: Attack = JSON.parse(incomingData.data);
@@ -33,6 +35,8 @@ const battleHandler = (incomingData: Message, ws: WebSocket) => {
     sendWhoseTurnIsNext(nextTurnIsFor, ws);
   } else {
     sendFinish(idOfUser, ws);
+    addToWinners(idOfUser);
+    sendWinnersToAllUsers();
   }
 
   sockets.forEach((socket) => {

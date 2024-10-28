@@ -2,7 +2,7 @@ import WebSocket from 'ws';
 import { Game, Message, shipsData } from '../types';
 import { playerShipsStructuring } from './utils/player-ships-structuring';
 import { games } from './const';
-import { sendWhoseTurnIsNext } from './utils/send-whose-turn-is-next';
+import { sendWhoseTurnIsNext } from './send-whose-turn-is-next';
 
 const handleStartGame = (incomingData: Message, ws: WebSocket) => {
   const { gameId, ships, indexPlayer }: shipsData = JSON.parse(incomingData.data);

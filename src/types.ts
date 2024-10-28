@@ -45,6 +45,11 @@ export interface SocketInterface {
   idOfUser: string;
 }
 
+export type Winner = {
+  name: string;
+  wins: number;
+};
+
 export type Game = {
   gameId: string;
   player1: string;

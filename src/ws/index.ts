@@ -6,6 +6,8 @@ import { createGame } from './create-game';
 import { handleStartGame } from './handle-start-game';
 import { battleHandler } from './battle-turns-handler';
 import { updateRoomsForAllUsers } from './utils/update-rooms-for-all-users';
+import { sendWinnersToAllUsers } from './send-winners-to-all-users';
+import { getUserNameByUserId } from './utils/get-username-by-user-id';
 
 const startWss = () => {
   const wss = new WebSocketServer({ port: 3000 });
@@ -21,16 +23,17 @@ const startWss = () => {
       switch (incomingData.type) {
         case 'reg':
           [nameOfUser, idOfUser] = handleRegResponse(userData, ws);
+          sendWinnersToAllUsers();
           break;
 
         case 'create_room':
           createRoom(ws, nameOfUser, idOfUser);
-          updateRoomsForAllUsers(wss);
+          updateRoomsForAllUsers();
           break;
 
         case 'add_user_to_room':
           createGame(userData, ws, idOfUser);
-          updateRoomsForAllUsers(wss);
+          updateRoomsForAllUsers();
           break;
 
         case 'add_ships':
