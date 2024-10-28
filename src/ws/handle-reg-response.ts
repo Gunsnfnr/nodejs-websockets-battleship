@@ -4,10 +4,9 @@ import crypto from 'node:crypto';
 import { sendUpdateRoom } from './send-update-room';
 import { sockets, users } from './const';
 
-const handleRegResponse = (userData: Buffer, ws: WebSocket): [string, string] => {
+const handleRegResponse = (incomingData: Message, ws: WebSocket): [string, string] => {
   let nameOfUser = '';
   let idOfUser = '';
-  const incomingData: Message = JSON.parse(userData.toString());
   let loginData: LoginData;
 
   loginData = JSON.parse(incomingData.data);

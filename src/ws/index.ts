@@ -7,7 +7,6 @@ import { handleStartGame } from './handle-start-game';
 import { battleHandler } from './battle-turns-handler';
 import { updateRoomsForAllUsers } from './utils/update-rooms-for-all-users';
 import { sendWinnersToAllUsers } from './send-winners-to-all-users';
-import { getUserNameByUserId } from './utils/get-username-by-user-id';
 
 const startWss = () => {
   const wss = new WebSocketServer({ port: 3000 });
@@ -22,7 +21,7 @@ const startWss = () => {
 
       switch (incomingData.type) {
         case 'reg':
-          [nameOfUser, idOfUser] = handleRegResponse(userData, ws);
+          [nameOfUser, idOfUser] = handleRegResponse(incomingData, ws);
           sendWinnersToAllUsers();
           break;
 
@@ -41,6 +40,10 @@ const startWss = () => {
           break;
 
         case 'attack':
+          battleHandler(incomingData, ws);
+          break;
+
+        case 'randomAttack':
           battleHandler(incomingData, ws);
           break;
 

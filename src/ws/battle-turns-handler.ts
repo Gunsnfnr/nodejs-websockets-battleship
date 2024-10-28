@@ -9,7 +9,19 @@ import { addToWinners } from './utils/add-to-winners';
 import { sendWinnersToAllUsers } from './send-winners-to-all-users';
 
 const battleHandler = (incomingData: Message, ws: WebSocket) => {
-  const { x: xFire, y: yFire, gameId, indexPlayer: idOfUser }: Attack = JSON.parse(incomingData.data);
+  const parsedData = JSON.parse(incomingData.data);
+  let xFire: number;
+  let yFire: number;
+  const gameId: string = parsedData.gameId;
+  const idOfUser: string = parsedData.indexPlayer;
+  if (incomingData.type === 'attack') {
+    xFire = JSON.parse(incomingData.data).x;
+    yFire = JSON.parse(incomingData.data).y;
+  } else {
+    xFire = Math.floor(Math.random() * 10);
+    yFire = Math.floor(Math.random() * 10);
+  }
+
   const [shotStatus, shouldGameGoOn] = checkShotResult(xFire, yFire, gameId, idOfUser);
   const currentGame = games.find((game) => game.gameId === gameId)!;
 
