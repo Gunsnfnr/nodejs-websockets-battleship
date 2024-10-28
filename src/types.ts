@@ -69,3 +69,12 @@ export interface fleetData {
   isDefeated: boolean;
   owner: string;
 }
+
+export interface Attack {
+  x: number;
+  y: number;
+  gameId: string;
+  indexPlayer: string;
+}
+
+export type ShotStatus = 'miss' | 'killed' | 'shot';

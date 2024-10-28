@@ -1,6 +1,6 @@
 import WebSocket, { WebSocketServer } from 'ws';
 import { handleRegResponse } from './handle-reg-response';
-import { createRoom } from './handle-create-room';
+import { createRoom } from './create-room';
 import { Message } from '../types';
 import { createGame } from './create-game';
 import { handleStartGame } from './handle-start-game';
@@ -37,9 +37,9 @@ const startWss = () => {
           handleStartGame(incomingData, ws);
           break;
 
-        // case 'attack':
-        //   battleHandler(idOfUser);
-        //   break;
+        case 'attack':
+          battleHandler(incomingData, ws);
+          break;
 
         default:
           console.log('unknown type');

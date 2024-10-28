@@ -20,6 +20,7 @@ const createGame = (userData: Buffer, ws: WebSocket, guestUser: string) => {
         sendCreateGame(gameId, guestUser, ws);
 
         sockets.forEach((socket) => {
+          console.log('createGame: socket: ', socket.idOfUser);
           if (socket.idOfUser === hostUserId) sendCreateGame(gameId, hostUserId, socket.webSocket);
         });
 
@@ -31,8 +32,8 @@ const createGame = (userData: Buffer, ws: WebSocket, guestUser: string) => {
           player1fleet: [],
           player2fleet: [],
         };
-
         games.push(newGame);
+        console.log('newGame: ', newGame);
       }
     }
   });
