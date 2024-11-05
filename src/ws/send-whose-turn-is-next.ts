@@ -10,5 +10,6 @@ const sendWhoseTurnIsNext = (playerId: string, ws: WebSocket) => {
   });
 
   ws.send(response);
+  console.log('turn');
 };
 export { sendWhoseTurnIsNext };

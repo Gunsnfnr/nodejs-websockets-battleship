@@ -48,6 +48,7 @@ const handleRegResponse = (incomingData: Message, ws: WebSocket): [string, strin
   }
 
   ws.send(response);
+  console.log('reg');
   sendUpdateRoom(ws);
 
   return [nameOfUser, idOfUser];

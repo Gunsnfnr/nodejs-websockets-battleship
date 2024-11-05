@@ -10,6 +10,7 @@ const sendFinish = (winPlayer: string, ws: WebSocket) => {
   });
 
   ws.send(response);
+  console.log('finish');
 };
 
 export { sendFinish };

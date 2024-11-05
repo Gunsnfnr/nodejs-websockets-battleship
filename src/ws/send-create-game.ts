@@ -10,5 +10,6 @@ const sendCreateGame = (gameId: string, userId: string, ws: WebSocket) => {
     id: 0,
   });
   ws.send(response);
+  console.log('create_game');
 };
 export { sendCreateGame };

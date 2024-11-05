@@ -8,5 +8,6 @@ const sendWinners = (ws: WebSocket) => {
     id: 0,
   });
   ws.send(response);
+  console.log('update_winners');
 };
 export { sendWinners };

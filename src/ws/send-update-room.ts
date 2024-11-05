@@ -9,5 +9,5 @@ const sendUpdateRoom = (ws: WebSocket) => {
   });
   ws.send(response);
 };
-
+console.log('update_room');
 export { sendUpdateRoom };

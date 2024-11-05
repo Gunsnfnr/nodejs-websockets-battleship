@@ -15,5 +15,6 @@ const sendAttackFeedback = (xFire: number, yFire: number, idOfUser: string, shot
     id: 0,
   });
   ws.send(attackFeedback);
+  console.log('attack', 'shotStatus: ', shotStatus);
 };
 export { sendAttackFeedback };
