@@ -11,6 +11,7 @@ import { handleRemoveUser } from './utils/remove-user';
 
 const startWss = () => {
   const wss = new WebSocketServer({ port: 3000 });
+  let currentPlayer: string;
 
   wss.on('connection', (ws: WebSocket) => {
     let nameOfUser: string;
@@ -18,7 +19,6 @@ const startWss = () => {
 
     ws.on('message', (userData: Buffer) => {
       const incomingData: Message = JSON.parse(userData.toString());
-      console.log('incomingData: ', incomingData);
 
       switch (incomingData.type) {
         case 'reg':
@@ -37,15 +37,15 @@ const startWss = () => {
           break;
 
         case 'add_ships':
-          handleStartGame(incomingData, ws);
+          currentPlayer = handleStartGame(incomingData, ws);
           break;
 
         case 'attack':
-          battleHandler(incomingData, ws);
+          currentPlayer = battleHandler(incomingData, currentPlayer, ws);
           break;
 
         case 'randomAttack':
-          battleHandler(incomingData, ws);
+          currentPlayer = battleHandler(incomingData, currentPlayer, ws);
           break;
 
         default:

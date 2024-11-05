@@ -9,12 +9,16 @@ import { addToWinners } from './utils/add-to-winners';
 import { sendWinnersToAllUsers } from './send-winners-to-all-users';
 import { sendAttackFeedback } from './send-attack-feedback';
 
-const battleHandler = (incomingData: Message, ws: WebSocket) => {
+const battleHandler = (incomingData: Message, currentPlayer: string, ws: WebSocket) => {
   const parsedData = JSON.parse(incomingData.data);
   let xFire: number;
   let yFire: number;
   const gameId: string = parsedData.gameId;
   const idOfUser: string = parsedData.indexPlayer;
+
+  const currentGame = games.find((game) => game.gameId === gameId)!;
+  if (currentPlayer !== idOfUser) return togglePlayer(idOfUser, currentGame);
+
   if (incomingData.type === 'attack') {
     xFire = JSON.parse(incomingData.data).x;
     yFire = JSON.parse(incomingData.data).y;
@@ -24,11 +28,9 @@ const battleHandler = (incomingData: Message, ws: WebSocket) => {
   }
 
   const [shotStatus, shouldGameGoOn, emptyCells] = checkShotResult(xFire, yFire, gameId, idOfUser);
-  const currentGame = games.find((game) => game.gameId === gameId)!;
 
   sendAttackFeedback(xFire, yFire, idOfUser, shotStatus, ws);
   if (shotStatus === 'killed') {
-    console.log('emptyCells: ', emptyCells);
     emptyCells.forEach((cell) => {
       sendAttackFeedback(cell.x, cell.y, idOfUser, 'miss', ws);
     });
@@ -62,6 +64,7 @@ const battleHandler = (incomingData: Message, ws: WebSocket) => {
       }
     }
   });
+  return nextTurnIsFor;
 };
 
 export { battleHandler };
