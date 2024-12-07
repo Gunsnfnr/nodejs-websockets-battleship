@@ -41,6 +41,7 @@ const checkShotResult = (
       }
     }
   }
+
   return [shotStatus, shouldGameGoOn, emptyCells];
 };
 export { checkShotResult };

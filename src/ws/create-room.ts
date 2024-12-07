@@ -5,7 +5,7 @@ import { sendUpdateRoom } from './send-update-room';
 import { rooms } from './const';
 import { isOtherEmptyRoomExist } from './utils/is-other-empty-room-exist';
 
-const createRoom = (ws: WebSocket, nameOfUser: string, idOfUser: string): void => {
+const createRoom = (ws: WebSocket, nameOfUser: string, idOfUser: string, botMode?: boolean): void | string => {
   let roomId: string = '';
 
   if (!isOtherEmptyRoomExist(idOfUser)) {
@@ -22,6 +22,7 @@ const createRoom = (ws: WebSocket, nameOfUser: string, idOfUser: string): void =
     };
     rooms.push(newRoom);
     sendUpdateRoom(ws);
+    if (botMode) return roomId;
   }
 };
 

@@ -16,14 +16,25 @@ const startWss = () => {
   wss.on('connection', (ws: WebSocket) => {
     let nameOfUser: string;
     let idOfUser: string;
+    let botMode: boolean;
+    let botId: string;
 
     ws.on('message', (userData: Buffer) => {
       const incomingData: Message = JSON.parse(userData.toString());
+      console.log('incomingData: ', incomingData);
 
       switch (incomingData.type) {
         case 'reg':
           [nameOfUser, idOfUser] = handleRegResponse(incomingData, ws);
           sendWinnersToAllUsers();
+          break;
+
+        case 'single_play':
+          botMode = true;
+          const roomId = createRoom(ws, nameOfUser, idOfUser, botMode);
+          botId = crypto.randomUUID();
+          createGame(userData, ws, botId, roomId as string);
+          updateRoomsForAllUsers();
           break;
 
         case 'create_room':
@@ -37,15 +48,15 @@ const startWss = () => {
           break;
 
         case 'add_ships':
-          currentPlayer = handleStartGame(incomingData, ws);
+          currentPlayer = handleStartGame(incomingData.data, ws, botId);
           break;
 
         case 'attack':
-          currentPlayer = battleHandler(incomingData, currentPlayer, ws);
+          currentPlayer = battleHandler(incomingData, currentPlayer, ws, botId);
           break;
 
         case 'randomAttack':
-          currentPlayer = battleHandler(incomingData, currentPlayer, ws);
+          currentPlayer = battleHandler(incomingData, currentPlayer, ws, botId);
           break;
 
         default:
